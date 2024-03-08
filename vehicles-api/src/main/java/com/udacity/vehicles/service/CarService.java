@@ -1,5 +1,9 @@
 package com.udacity.vehicles.service;
 
+import com.udacity.vehicles.client.maps.MapsClient;
+import com.udacity.vehicles.client.prices.Price;
+import com.udacity.vehicles.client.prices.PriceClient;
+import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
 import java.util.List;
@@ -14,13 +18,19 @@ import org.springframework.stereotype.Service;
 public class CarService {
 
     private final CarRepository repository;
+    private final MapsClient mapsClient;
+    private final PriceClient priceClient;
 
-    public CarService(CarRepository repository) {
+
+    
+    public CarService(CarRepository repository, MapsClient mapsClient, PriceClient priceClient) {
         /**
          * TODO: Add the Maps and Pricing Web Clients you create
          * in `VehiclesApiApplication` as arguments and set them here.
          */
         this.repository = repository;
+        this.mapsClient = mapsClient;
+        this.priceClient = priceClient;
     }
 
     /**
@@ -44,8 +54,11 @@ public class CarService {
          * If it does not exist, throw a CarNotFoundException
          * Remove the below code as part of your implementation.
          */
-        Car car = repository.findById(id).get();
-
+        Car car = repository.findById(id).orElseThrow(CarNotFoundException::new);
+        Location location = mapsClient.getAddress(car.getLocation());
+        String price = priceClient.getPrice(id);
+        car.setLocation(location);
+        car.setPrice(price);
         /**
          * TODO: Use the Pricing Web client you create in `VehiclesApiApplication`
          * to get the price based on the `id` input'
