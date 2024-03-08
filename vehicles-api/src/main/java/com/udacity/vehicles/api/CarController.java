@@ -80,8 +80,8 @@ class CarController {
          * TODO: Use the `assembler` on that saved car and return as part of the response.
          *   Update the first line as part of the above implementing.
          */
-        Car savedCar = carService.save(car);
-        Resource<Car> resource = assembler.toResource(savedCar);
+        Car createdCar = carService.save(car);
+        Resource<Car> resource = assembler.toResource(createdCar);
         return ResponseEntity.created(new URI(resource.getId().expand().getHref())).body(resource);
     }
 
@@ -91,6 +91,7 @@ class CarController {
      * @param car The updated information about the related vehicle.
      * @return response that the vehicle was updated in the system
      */
+    @SuppressWarnings("null")
     @PutMapping("/{id}")
     ResponseEntity<?> put(@PathVariable Long id, @Valid @RequestBody Car car) {
         /**
