@@ -19,10 +19,6 @@ public class PriceClient {
         this.client = pricing;
     }
 
-    // In a real-world application we'll want to add some resilience
-    // to this method with retries/CB/failover capabilities
-    // We may also want to cache the results so we don't need to
-    // do a request every time
     /**
      * Gets a vehicle price from the pricing client, given vehicle ID.
      * @param vehicleId ID number of the vehicle for which to get the price
@@ -35,7 +31,7 @@ public class PriceClient {
             Price price = client
                     .get()
                     .uri(uriBuilder -> uriBuilder
-                            .path("services/price/")
+                            .path("/services/price")
                             .queryParam("vehicleId", vehicleId)
                             .build()
                     )
